@@ -12,14 +12,12 @@ namespace Login_IT4B
 {
     public partial class FormLogin : Form
     {
-        private User admin = new User("admin", "password");
-        
-        //private string username = "admin";
-        //private string password = "password";
+        SqlRepository sqlRepository;
 
         public FormLogin()
         {
             InitializeComponent();
+            sqlRepository = new SqlRepository();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -29,14 +27,30 @@ namespace Login_IT4B
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            if(txtUsername.Text == admin.Username && txtPassword.Text == admin.Password)
+            var user = sqlRepository.GetUser(txtUsername.Text.Trim());
+            if(user != null)
             {
-                new FormMain(admin).Show(this);
-                Hide();
+                if (user.VerifyPassword(txtPassword.Text))
+                {
+                    new FormMain(user).Show(this);
+                    Hide();
+                }
+                else
+                {
+                    MessageBox.Show("Username or password incorrect.");
+                }
             }
             else
             {
                 MessageBox.Show("Username or password incorrect.");
+            }
+        }
+
+        private void txtPassword_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.Enter)
+            {
+                btnOK.PerformClick();
             }
         }
     }
