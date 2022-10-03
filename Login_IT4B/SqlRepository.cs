@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,8 @@ namespace Login_IT4B
 {
     public class SqlRepository
     {
+        private string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Login_B;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+
         private Dictionary<string,User> users = new Dictionary<string, User>()
         {
             {"admin", new User("admin","admin") },
@@ -19,19 +22,47 @@ namespace Login_IT4B
 
         public List<User> GetUsers()
         {
-            return users.Values.ToList();
+            List<User> users = new List<User>();    
+            using(SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                using(SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "select * from User";
+                    using(SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            users.Add(new User(reader["Name"].ToString(),reader["Password"].ToString()));
+                        }
+                    }
+                }
+                conn.Close();
+            }
+            return users;
         }
 
         public User? GetUser(string username)
         {
-            if (users.ContainsKey(username))
+            User? user = null;
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                return users[username];
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "select * from [User] where Name=@Name";
+                    cmd.Parameters.AddWithValue("Name", username);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            user = new User(reader["Name"].ToString(), reader["Password"].ToString());
+                        }                        
+                    }
+                }
+                conn.Close();
             }
-            else
-            {
-                return null;
-            }
+            return user;
         }
     }
 }
