@@ -64,5 +64,10 @@ namespace Login_IT4B
             }
             return user;
         }
+
+        public void ConvertUsersFromPasswordToPasswordHash()
+        {
+
+        }
     }
 }

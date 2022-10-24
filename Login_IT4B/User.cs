@@ -10,12 +10,22 @@ namespace Login_IT4B
     public class User
     {
         public string Username { get; }
+        public byte[] PasswordSalt { get; set; }
+        public byte[] PasswordHash { get; set; }
         public string Password { get; }
-
+        
         public User(string username, string password)
         {
             Username = username;
             Password = password;
+            GetPasswordHash(password);
+        }
+
+        public User(string username, byte[] passwordSalt, byte[] passwordHash)
+        {
+            Username = username;
+            PasswordSalt = passwordSalt;
+            PasswordHash = passwordHash;
         }
 
         public bool VerifyPassword(string text)
@@ -23,16 +33,13 @@ namespace Login_IT4B
             return Password == text;
         }
 
-        private byte[] GetPasswordHash(string password)
+        private void GetPasswordHash(string password)
         {
-            byte[] passwordSalt;
-            byte[] passwordHash;
             using(var hmac = new HMACSHA512())
             {
-                passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-            }
-            return passwordHash;
+                PasswordSalt = hmac.Key;
+                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+            }            
         }
 
         
