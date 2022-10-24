@@ -18,6 +18,7 @@ namespace Login_IT4B
         {
             InitializeComponent();
             sqlRepository = new SqlRepository();
+            sqlRepository.ConvertUsersFromPasswordToPasswordHash();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)

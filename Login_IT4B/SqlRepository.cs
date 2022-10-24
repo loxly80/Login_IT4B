@@ -28,7 +28,7 @@ namespace Login_IT4B
                 conn.Open();
                 using(SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "select * from User";
+                    cmd.CommandText = "select * from [User]";
                     using(SqlDataReader reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
@@ -65,9 +65,30 @@ namespace Login_IT4B
             return user;
         }
 
+        public void SaveUser(User user)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "update [User] set PasswordSalt=@Salt, PasswordHash=@Hash where Name=@Name";
+                    cmd.Parameters.AddWithValue("Name", user.Username);
+                    cmd.Parameters.AddWithValue("Salt", user.PasswordSalt);
+                    cmd.Parameters.AddWithValue("Hash", user.PasswordHash);
+                    cmd.ExecuteNonQuery();
+                }
+                conn.Close();
+            }
+        }
+
         public void ConvertUsersFromPasswordToPasswordHash()
         {
-
+            var users = GetUsers();
+            foreach(var user in users)
+            {
+                SaveUser(user);
+            }
         }
     }
 }
