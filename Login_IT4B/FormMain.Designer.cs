@@ -30,6 +30,7 @@
         {
             this.label1 = new System.Windows.Forms.Label();
             this.lblUser = new System.Windows.Forms.Label();
+            this.btnUserEditor = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -52,11 +53,22 @@
             this.lblUser.TabIndex = 1;
             this.lblUser.Text = "label2";
             // 
+            // btnUserEditor
+            // 
+            this.btnUserEditor.Location = new System.Drawing.Point(12, 12);
+            this.btnUserEditor.Name = "btnUserEditor";
+            this.btnUserEditor.Size = new System.Drawing.Size(189, 34);
+            this.btnUserEditor.TabIndex = 2;
+            this.btnUserEditor.Text = "Správce uživatelů";
+            this.btnUserEditor.UseVisualStyleBackColor = true;
+            this.btnUserEditor.Click += new System.EventHandler(this.btnUserEditor_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(832, 472);
+            this.Controls.Add(this.btnUserEditor);
             this.Controls.Add(this.lblUser);
             this.Controls.Add(this.label1);
             this.Name = "FormMain";
@@ -71,5 +83,6 @@
 
         private Label label1;
         private Label lblUser;
+        private Button btnUserEditor;
     }
 }

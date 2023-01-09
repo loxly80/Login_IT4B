@@ -25,5 +25,11 @@ namespace Login_IT4B
                 parentForm.Close();
             }
         }
+
+        private void btnUserEditor_Click(object sender, EventArgs e)
+        {
+            FormUserEditor formUserEditor = new FormUserEditor();
+            formUserEditor.ShowDialog();
+        }
     }
 }
